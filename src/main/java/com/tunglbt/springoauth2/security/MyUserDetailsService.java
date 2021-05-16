@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,9 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class MyUserDetailsService implements UserDetailsService {
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -40,10 +40,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserEntity findUser(String username) {
-        // hard coding the users
+        // hard code the users
         final List<UserEntity> users = Arrays.asList(
-                new UserEntity(1L, "tunglbt", bCryptPasswordEncoder.encode("123456"), "USER"),
-                new UserEntity(2L, "admin", bCryptPasswordEncoder.encode("123456"), "ADMIN")
+                new UserEntity(1L, "tunglbt", passwordEncoder.encode("123456"), "USER"),
+                new UserEntity(2L, "admin", passwordEncoder.encode("123456"), "ADMIN")
         );
         for (UserEntity user : users) {
             if (user.getUsername().equals(username)) {
