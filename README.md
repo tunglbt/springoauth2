@@ -1,2 +1,2 @@
-# springoauth2
-Spring Boot Project with OAuth2
+# JWT Authentication With Spring Boot’s OAuth2
+JWT Authentication With Spring Boot’s OAuth2
