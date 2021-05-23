@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configurers.oauth2.ser
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -45,16 +47,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                                         "/login"
                                 )
                                 .permitAll()
+                                .antMatchers("/admin/**").access("hasRole('ADMIN')")
                                 .anyRequest()
                                 .authenticated()
                 )
-                .exceptionHandling().disable()
+                .exceptionHandling().accessDeniedHandler((request, response, accessDeniedException) -> {
+                    AccessDeniedHandler defaultAccessDeniedHandler = new AccessDeniedHandlerImpl();
+                    defaultAccessDeniedHandler.handle(request, response, accessDeniedException);
+                })
+                .and()
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
     }
 
     @Override
     @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 }
