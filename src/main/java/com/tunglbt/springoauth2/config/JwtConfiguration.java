@@ -33,9 +33,8 @@ public class JwtConfiguration {
 
     @Bean
     public KeyStore keyStore() {
-        try {
+        try (InputStream resourceAsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(keyStorePath)) {
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            InputStream resourceAsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(keyStorePath);
             keyStore.load(resourceAsStream, keyStorePassword.toCharArray());
             return keyStore;
         } catch (IOException | CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
